@@ -10,6 +10,11 @@ const HEADBOB_MOVE_AMOUNT: float = 0.06
 const HEADBOB_FREQUENCY: float = 2.4
 var headbob_time: float = 0.0
 
+@export_category("Air Movement")
+@export var air_cap: float = 0.85  # Can surf steeper ramps if this is higher, makes it easier to stick and bhop
+@export var air_acceleration: float = 800.0
+@export var air_move_speed: float = 500.0
+
 var wish_direction: Vector3 = Vector3.ZERO
 
 
@@ -51,6 +56,15 @@ func _process(delta: float) -> void:
 
 func _handle_air_physics(delta: float) -> void:
 	self.velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * delta
+
+	var current_speed_in_wish_direction = self.velocity.dot(wish_direction)
+	var capped_speed = min((air_move_speed * wish_direction).length(), air_cap)
+	var add_speed_until_cap = capped_speed - current_speed_in_wish_direction
+
+	if add_speed_until_cap > 0:
+		var acceleration_speed = air_acceleration * air_move_speed * delta
+		acceleration_speed = min(acceleration_speed, add_speed_until_cap)
+		self.velocity += acceleration_speed * wish_direction
 
 
 func _handle_ground_physics(delta: float) -> void:
