@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://2hmpuo8qblwe"]
+
+[ext_resource type="Script" uid="uid://bp3igkhbwlg5m" path="res://scripts/fps_controller.gd" id="1_u7epq"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f6xud"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_jr1ti"]
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+script = ExtResource("1_u7epq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_f6xud")
+
+[node name="WorldModel" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WorldModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_jr1ti")
+
+[node name="Head" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+unique_name_in_owner = true
+cull_mask = 1048573
