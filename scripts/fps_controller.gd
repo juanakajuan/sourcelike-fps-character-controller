@@ -37,7 +37,12 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _headbob_effect(delta):
-	pass
+	headbob_time += delta * self.velocity.length()
+	%Camera3D.transform.origin = Vector3(
+		cos(headbob_time * HEADBOB_FREQUENCY * 0.5) * HEADBOB_MOVE_AMOUNT,
+		sin(headbob_time * HEADBOB_FREQUENCY) * HEADBOB_MOVE_AMOUNT,
+		0
+	)
 
 
 func _process(delta: float) -> void:
@@ -52,6 +57,8 @@ func _handle_ground_physics(delta: float) -> void:
 	self.velocity.x = wish_direction.x * get_move_speed()
 	self.velocity.z = wish_direction.z * get_move_speed()
 
+	_headbob_effect(delta)
+
 
 func _physics_process(delta: float) -> void:
 	var input_direction: Vector2 = (
@@ -63,7 +70,7 @@ func _physics_process(delta: float) -> void:
 	)
 
 	if is_on_floor():
-		if Input.is_action_pressed("jump"):
+		if Input.is_action_just_pressed("jump") or (auto_bhop and Input.is_action_pressed("jump")):
 			self.velocity.y = jump_velocity
 
 		_handle_ground_physics(delta)
