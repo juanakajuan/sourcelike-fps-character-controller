@@ -27,6 +27,31 @@ func get_move_speed() -> float:
 	return sprint_speed if Input.is_action_pressed("sprint") else walk_speed
 
 
+func clip_velocity(normal: Vector3, overbounce: float, delta: float) -> void:
+	var backoff: float = self.velocity.dot(normal) * overbounce
+
+	if backoff >= 0:
+		return
+
+	var change: Vector3 = normal * backoff
+	self.velocity -= change
+
+	var adjust: float = self.velocity.dot(normal)
+	if adjust < 0.0:
+		self.velocity -= normal * adjust
+
+
+func is_surface_too_steep(normal: Vector3) -> bool:
+	var max_slope_angle_dot: float = (
+		Vector3(0, 1, 0).rotated(Vector3(1, 0, 0), self.floor_max_angle).dot(Vector3(0, 1, 0))
+	)
+
+	if normal.dot(Vector3(0, 1, 0)) < max_slope_angle_dot:
+		return true
+
+	return false
+
+
 func _ready() -> void:
 	for child: Node in %WorldModel.find_children("*", "VisualInstance3D"):
 		child.set_layer_mask_value(1, false)
@@ -70,6 +95,14 @@ func _handle_air_physics(delta: float) -> void:
 		var acceleration_speed: float = air_acceleration * air_move_speed * delta
 		acceleration_speed = min(acceleration_speed, add_speed_until_cap)
 		self.velocity += acceleration_speed * wish_direction
+
+	if is_on_wall():
+		if is_surface_too_steep(get_wall_normal()):
+			self.motion_mode = CharacterBody3D.MOTION_MODE_FLOATING
+		else:
+			self.motion_mode = CharacterBody3D.MOTION_MODE_GROUNDED
+
+		clip_velocity(get_wall_normal(), 1, delta)  # Allows surf
 
 
 func _handle_ground_physics(delta: float) -> void:
