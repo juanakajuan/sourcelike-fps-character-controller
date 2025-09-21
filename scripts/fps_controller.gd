@@ -1,12 +1,16 @@
 extends CharacterBody3D
 
-@export var look_sensitivity: float = 0.006
+@export var look_sensitivity: float = 0.002
 @export var jump_velocity: float = 6.0
 @export var auto_bhop: bool = true
 @export var walk_speed: float = 7.0
 @export var sprint_speed: float = 8.5
 
 var wish_direction: Vector3 = Vector3.ZERO
+
+
+func get_move_speed() -> float:
+	return sprint_speed if Input.is_action_pressed("sprint") else walk_speed
 
 
 func _ready() -> void:
@@ -37,8 +41,8 @@ func _handle_air_physics(delta: float) -> void:
 
 
 func _handle_ground_physics(delta: float) -> void:
-	self.velocity.x = wish_direction.x * walk_speed
-	self.velocity.z = wish_direction.z * walk_speed
+	self.velocity.x = wish_direction.x * get_move_speed()
+	self.velocity.z = wish_direction.z * get_move_speed()
 
 
 func _physics_process(delta: float) -> void:
@@ -51,6 +55,9 @@ func _physics_process(delta: float) -> void:
 	)
 
 	if is_on_floor():
+		if Input.is_action_pressed("jump"):
+			self.velocity.y = jump_velocity
+
 		_handle_ground_physics(delta)
 	else:
 		_handle_air_physics(delta)

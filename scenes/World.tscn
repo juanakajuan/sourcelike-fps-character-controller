@@ -18,9 +18,9 @@ glow_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7g83o"]
 albedo_texture = ExtResource("2_32lhk")
-uv1_scale = Vector3(0.4, 0.4, 0.4)
+uv1_scale = Vector3(0.2, 0.2, 0.2)
 uv1_triplanar = true
-uv2_scale = Vector3(0.4, 0.4, 0.4)
+uv2_scale = Vector3(0.2, 0.2, 0.2)
 uv2_triplanar = true
 
 [node name="World" type="Node3D"]
@@ -39,4 +39,4 @@ shadow_enabled = true
 [node name="CSGBox3D" type="CSGBox3D" parent="Level"]
 material_override = SubResource("StandardMaterial3D_7g83o")
 use_collision = true
-size = Vector3(30, 0, 30)
+size = Vector3(40, 0, 40)
