@@ -3,15 +3,20 @@ extends CharacterBody3D
 @export var look_sensitivity: float = 0.002
 @export var jump_velocity: float = 6.0
 @export var auto_bhop: bool = true
-@export var walk_speed: float = 7.0
-@export var sprint_speed: float = 8.5
 
 const HEADBOB_MOVE_AMOUNT: float = 0.06
 const HEADBOB_FREQUENCY: float = 2.4
 var headbob_time: float = 0.0
 
+@export_category("Ground Movement")
+@export var walk_speed: float = 7.0
+@export var sprint_speed: float = 8.5
+@export var ground_acceleration: float = 14.0
+@export var ground_deceleration: float = 10.0
+@export var ground_friction: float = 6.0
+
 @export_category("Air Movement")
-@export var air_cap: float = 0.85  # Can surf steeper ramps if this is higher, makes it easier to stick and bhop
+@export var air_cap: float = 0.85
 @export var air_acceleration: float = 800.0
 @export var air_move_speed: float = 500.0
 
@@ -23,7 +28,7 @@ func get_move_speed() -> float:
 
 
 func _ready() -> void:
-	for child in %WorldModel.find_children("*", "VisualInstance3D"):
+	for child: Node in %WorldModel.find_children("*", "VisualInstance3D"):
 		child.set_layer_mask_value(1, false)
 		child.set_layer_mask_value(2, true)
 
@@ -41,7 +46,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			%Camera3D.rotation.x = clamp(%Camera3D.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 
 
-func _headbob_effect(delta):
+func _headbob_effect(delta: float) -> void:
 	headbob_time += delta * self.velocity.length()
 	%Camera3D.transform.origin = Vector3(
 		cos(headbob_time * HEADBOB_FREQUENCY * 0.5) * HEADBOB_MOVE_AMOUNT,
@@ -57,19 +62,33 @@ func _process(delta: float) -> void:
 func _handle_air_physics(delta: float) -> void:
 	self.velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * delta
 
-	var current_speed_in_wish_direction = self.velocity.dot(wish_direction)
-	var capped_speed = min((air_move_speed * wish_direction).length(), air_cap)
-	var add_speed_until_cap = capped_speed - current_speed_in_wish_direction
+	var current_speed_in_wish_direction: float = self.velocity.dot(wish_direction)
+	var capped_speed: float = min((air_move_speed * wish_direction).length(), air_cap)
+	var add_speed_until_cap: float = capped_speed - current_speed_in_wish_direction
 
 	if add_speed_until_cap > 0:
-		var acceleration_speed = air_acceleration * air_move_speed * delta
+		var acceleration_speed: float = air_acceleration * air_move_speed * delta
 		acceleration_speed = min(acceleration_speed, add_speed_until_cap)
 		self.velocity += acceleration_speed * wish_direction
 
 
 func _handle_ground_physics(delta: float) -> void:
-	self.velocity.x = wish_direction.x * get_move_speed()
-	self.velocity.z = wish_direction.z * get_move_speed()
+	var current_speed_in_wish_direction: float = self.velocity.dot(wish_direction)
+	var add_speed_until_cap: float = get_move_speed() - current_speed_in_wish_direction
+
+	if add_speed_until_cap > 0:
+		var acceleration_speed: float = ground_acceleration * delta * get_move_speed()
+		acceleration_speed = min(acceleration_speed, add_speed_until_cap)
+		self.velocity += acceleration_speed * wish_direction
+
+	# Apply friction
+	var control: float = max(self.velocity.length(), ground_deceleration)
+	var drop: float = control * ground_friction * delta
+	var new_speed: float = max(self.velocity.length() - drop, 0.0)
+
+	if self.velocity.length() > 0:
+		new_speed /= self.velocity.length()
+	self.velocity *= new_speed
 
 	_headbob_effect(delta)
 
