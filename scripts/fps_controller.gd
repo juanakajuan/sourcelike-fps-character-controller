@@ -27,7 +27,7 @@ func get_move_speed() -> float:
 	return sprint_speed if Input.is_action_pressed("sprint") else walk_speed
 
 
-func clip_velocity(normal: Vector3, overbounce: float, delta: float) -> void:
+func clip_velocity(normal: Vector3, overbounce: float) -> void:
 	var backoff: float = self.velocity.dot(normal) * overbounce
 
 	if backoff >= 0:
@@ -80,10 +80,6 @@ func _headbob_effect(delta: float) -> void:
 	)
 
 
-func _process(delta: float) -> void:
-	pass
-
-
 func _handle_air_physics(delta: float) -> void:
 	self.velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * delta
 
@@ -102,7 +98,7 @@ func _handle_air_physics(delta: float) -> void:
 		else:
 			self.motion_mode = CharacterBody3D.MOTION_MODE_GROUNDED
 
-		clip_velocity(get_wall_normal(), 1, delta)  # Allows surf
+		clip_velocity(get_wall_normal(), 1)  # Allows surf
 
 
 func _handle_ground_physics(delta: float) -> void:
