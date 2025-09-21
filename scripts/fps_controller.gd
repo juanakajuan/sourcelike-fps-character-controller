@@ -21,6 +21,10 @@ var headbob_time: float = 0.0
 @export var air_move_speed: float = 500.0
 
 var wish_direction: Vector3 = Vector3.ZERO
+var camera_aligned_wish_direction: Vector3 = Vector3.ZERO
+
+var noclip_speed_multiplier: float = 3.0
+var noclip: bool = false
 
 
 func get_move_speed() -> float:
@@ -122,6 +126,25 @@ func _handle_ground_physics(delta: float) -> void:
 	_headbob_effect(delta)
 
 
+func _handle_noclip(delta: float) -> bool:
+	if Input.is_action_just_pressed("noclip") and OS.has_feature("debug"):
+		noclip = !noclip
+
+	$CollisionShape3D.disabled = noclip
+
+	if not noclip:
+		return false
+
+	var speed: float = get_move_speed() * noclip_speed_multiplier
+	if Input.is_action_pressed("sprint"):
+		speed *= 3.0
+
+	self.velocity = camera_aligned_wish_direction * speed
+	global_position += self.velocity * delta
+
+	return true
+
+
 func _physics_process(delta: float) -> void:
 	var input_direction: Vector2 = (
 		Input.get_vector("move_left", "move_right", "move_forward", "move_backward").normalized()
@@ -130,13 +153,20 @@ func _physics_process(delta: float) -> void:
 	wish_direction = (
 		self.global_transform.basis * Vector3(input_direction.x, 0.0, input_direction.y)
 	)
+	camera_aligned_wish_direction = (
+		%Camera3D.global_transform.basis * Vector3(input_direction.x, 0.0, input_direction.y)
+	)
 
-	if is_on_floor():
-		if Input.is_action_just_pressed("jump") or (auto_bhop and Input.is_action_pressed("jump")):
-			self.velocity.y = jump_velocity
+	if not _handle_noclip(delta):
+		if is_on_floor():
+			if (
+				Input.is_action_just_pressed("jump")
+				or (auto_bhop and Input.is_action_pressed("jump"))
+			):
+				self.velocity.y = jump_velocity
 
-		_handle_ground_physics(delta)
-	else:
-		_handle_air_physics(delta)
+			_handle_ground_physics(delta)
+		else:
+			_handle_air_physics(delta)
 
-	move_and_slide()
+		move_and_slide()
