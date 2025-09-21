@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://2lsqvwx5p2uj"]
+[gd_scene load_steps=8 format=3 uid="uid://2lsqvwx5p2uj"]
 
 [ext_resource type="PackedScene" uid="uid://2hmpuo8qblwe" path="res://scenes/FPSController.tscn" id="1_kqs1s"]
 [ext_resource type="Texture2D" uid="uid://4qob7jen4nei" path="res://addons/kenney_prototype_textures/dark/texture_08.png" id="2_32lhk"]
@@ -23,6 +23,9 @@ uv1_triplanar = true
 uv2_scale = Vector3(0.2, 0.2, 0.2)
 uv2_triplanar = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_32lhk"]
+albedo_color = Color(0.13527128, 0.13527128, 0.13527128, 1)
+
 [node name="World" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -36,7 +39,33 @@ shadow_enabled = true
 
 [node name="Level" type="Node3D" parent="."]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Level"]
+[node name="Floor" type="CSGBox3D" parent="Level"]
 material_override = SubResource("StandardMaterial3D_7g83o")
 use_collision = true
 size = Vector3(40, 0, 40)
+
+[node name="Walls" type="Node3D" parent="Level"]
+
+[node name="Wall" type="CSGBox3D" parent="Level/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, 0)
+material_override = SubResource("StandardMaterial3D_32lhk")
+use_collision = true
+size = Vector3(0, 10, 40)
+
+[node name="Wall2" type="CSGBox3D" parent="Level/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, 0)
+material_override = SubResource("StandardMaterial3D_32lhk")
+use_collision = true
+size = Vector3(0, 10, 40)
+
+[node name="Wall3" type="CSGBox3D" parent="Level/Walls"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 5, -20)
+material_override = SubResource("StandardMaterial3D_32lhk")
+use_collision = true
+size = Vector3(0, 10, 40)
+
+[node name="Wall4" type="CSGBox3D" parent="Level/Walls"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 5, 20)
+material_override = SubResource("StandardMaterial3D_32lhk")
+use_collision = true
+size = Vector3(0, 10, 40)

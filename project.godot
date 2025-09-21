@@ -56,4 +56,6 @@ sprint={
 
 [physics]
 
+common/physics_jitter_fix=0.0
 3d/default_gravity=12.0
+common/physics_interpolation=true

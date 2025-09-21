@@ -6,6 +6,10 @@ extends CharacterBody3D
 @export var walk_speed: float = 7.0
 @export var sprint_speed: float = 8.5
 
+const HEADBOB_MOVE_AMOUNT: float = 0.06
+const HEADBOB_FREQUENCY: float = 2.4
+var headbob_time: float = 0.0
+
 var wish_direction: Vector3 = Vector3.ZERO
 
 
@@ -30,6 +34,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			rotate_y(-event.relative.x * look_sensitivity)
 			%Camera3D.rotate_x(-event.relative.y * look_sensitivity)
 			%Camera3D.rotation.x = clamp(%Camera3D.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+
+
+func _headbob_effect(delta):
+	pass
 
 
 func _process(delta: float) -> void:
