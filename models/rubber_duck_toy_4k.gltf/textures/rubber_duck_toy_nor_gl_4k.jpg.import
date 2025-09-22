@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d3l6d4xablxdg"
-path.s3tc="res://.godot/imported/texture_06.png-88331a9f246e47943dc01d0128a4ca4e.s3tc.ctex"
+uid="uid://def6r8t2201s3"
+path.s3tc="res://.godot/imported/rubber_duck_toy_nor_gl_4k.jpg-4d8ee6a2968e94ff0d96c716d04b0765.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/kenney_prototype_textures/light/texture_06.png"
-dest_files=["res://.godot/imported/texture_06.png-88331a9f246e47943dc01d0128a4ca4e.s3tc.ctex"]
+source_file="res://models/rubber_duck_toy_4k.gltf/textures/rubber_duck_toy_nor_gl_4k.jpg"
+dest_files=["res://.godot/imported/rubber_duck_toy_nor_gl_4k.jpg-4d8ee6a2968e94ff0d96c716d04b0765.s3tc.ctex"]
 
 [params]
 
@@ -22,12 +22,12 @@ compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=1
+roughness/src_normal="res://models/rubber_duck_toy_4k.gltf/textures/rubber_duck_toy_nor_gl_4k.jpg"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

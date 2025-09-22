@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://bh5hh0ba88ep5"]
+
+[sub_resource type="GDScript" id="GDScript_35w1a"]
+script/source = "extends CanvasLayer
+
+func _process(_delta: float) -> void:
+	$Label.text = str(int(Engine.get_frames_per_second()))
+"
+
+[node name="FPSCounter" type="CanvasLayer"]
+script = SubResource("GDScript_35w1a")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "FPS"

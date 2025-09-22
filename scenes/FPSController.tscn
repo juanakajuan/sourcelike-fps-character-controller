@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://2hmpuo8qblwe"]
+[gd_scene load_steps=5 format=3 uid="uid://2hmpuo8qblwe"]
 
 [ext_resource type="Script" uid="uid://bp3igkhbwlg5m" path="res://scripts/fps_controller.gd" id="1_u7epq"]
+[ext_resource type="PackedScene" uid="uid://casjfhonfstyb" path="res://models/rubber_duck_toy_4k.gltf/rubber_duck_toy_4k.gltf" id="2_jr1ti"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f6xud"]
 
@@ -19,6 +20,9 @@ unique_name_in_owner = true
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WorldModel"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_jr1ti")
+
+[node name="rubber_duck_toy" parent="WorldModel" instance=ExtResource("2_jr1ti")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.9787873, 0)
 
 [node name="Head" type="Node3D" parent="."]
 unique_name_in_owner = true

@@ -1,7 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://2lsqvwx5p2uj"]
+[gd_scene load_steps=11 format=3 uid="uid://2lsqvwx5p2uj"]
 
 [ext_resource type="PackedScene" uid="uid://2hmpuo8qblwe" path="res://scenes/FPSController.tscn" id="1_kqs1s"]
 [ext_resource type="Texture2D" uid="uid://4qob7jen4nei" path="res://addons/kenney_prototype_textures/dark/texture_08.png" id="2_32lhk"]
+[ext_resource type="PackedScene" uid="uid://dvul6jp2cd48t" path="res://scenes/CSGStairMaker3D.tscn" id="3_7g83o"]
+[ext_resource type="Texture2D" uid="uid://d3l6d4xablxdg" path="res://addons/kenney_prototype_textures/light/texture_06.png" id="4_d1c63"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_32lhk"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -25,6 +27,10 @@ uv2_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_32lhk"]
 albedo_color = Color(0.13527128, 0.13527128, 0.13527128, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1lgw5"]
+albedo_texture = ExtResource("4_d1c63")
+uv1_triplanar = true
 
 [node name="World" type="Node3D"]
 
@@ -69,3 +75,9 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 5
 material_override = SubResource("StandardMaterial3D_32lhk")
 use_collision = true
 size = Vector3(0, 10, 80)
+
+[node name="CSGStairMaker3D" parent="Level" instance=ExtResource("3_7g83o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.548197, 2, 0)
+material_override = SubResource("StandardMaterial3D_1lgw5")
+use_collision = true
+size = Vector3(4, 4, 4)
