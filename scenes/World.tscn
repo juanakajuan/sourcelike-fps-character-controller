@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://2lsqvwx5p2uj"]
+[gd_scene load_steps=13 format=3 uid="uid://2lsqvwx5p2uj"]
 
 [ext_resource type="PackedScene" uid="uid://2hmpuo8qblwe" path="res://scenes/FPSController.tscn" id="1_kqs1s"]
 [ext_resource type="Texture2D" uid="uid://4qob7jen4nei" path="res://addons/kenney_prototype_textures/dark/texture_08.png" id="2_32lhk"]
@@ -28,9 +28,19 @@ uv2_triplanar = true
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_32lhk"]
 albedo_color = Color(0.13527128, 0.13527128, 0.13527128, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d1c63"]
+albedo_texture = ExtResource("4_d1c63")
+uv1_triplanar = true
+uv2_triplanar = true
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1lgw5"]
 albedo_texture = ExtResource("4_d1c63")
 uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hlk0d"]
+albedo_texture = ExtResource("4_d1c63")
+uv1_triplanar = true
+uv2_triplanar = true
 
 [node name="World" type="Node3D"]
 
@@ -76,8 +86,55 @@ material_override = SubResource("StandardMaterial3D_32lhk")
 use_collision = true
 size = Vector3(0, 10, 80)
 
-[node name="CSGStairMaker3D" parent="Level" instance=ExtResource("3_7g83o")]
+[node name="Obstacles" type="Node3D" parent="Level"]
+
+[node name="Obstacle" type="CSGBox3D" parent="Level/Obstacles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.29989, 0.5599548, 0)
+material_override = SubResource("StandardMaterial3D_d1c63")
+use_collision = true
+
+[node name="Obstacle2" type="CSGBox3D" parent="Level/Obstacles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.388643, 1.9365263, 1.5210947)
+material_override = SubResource("StandardMaterial3D_d1c63")
+use_collision = true
+
+[node name="Obstacle3" type="CSGBox3D" parent="Level/Obstacles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.510708, 3.0130146, -0.76979625)
+material_override = SubResource("StandardMaterial3D_d1c63")
+use_collision = true
+
+[node name="Obstacle4" type="CSGBox3D" parent="Level/Obstacles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.832092, 3.8397822, -2.9533482)
+material_override = SubResource("StandardMaterial3D_d1c63")
+use_collision = true
+
+[node name="Obstacle5" type="CSGBox3D" parent="Level/Obstacles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.945908, 4.599491, -3.8164797)
+material_override = SubResource("StandardMaterial3D_d1c63")
+use_collision = true
+
+[node name="Obstacle6" type="CSGBox3D" parent="Level/Obstacles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.354055, 5.466858, -2.2492814)
+material_override = SubResource("StandardMaterial3D_d1c63")
+use_collision = true
+
+[node name="Obstacle7" type="CSGBox3D" parent="Level/Obstacles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.970945, 6.5766153, -4.3982267)
+material_override = SubResource("StandardMaterial3D_d1c63")
+use_collision = true
+
+[node name="Stairs" type="Node3D" parent="Level"]
+
+[node name="StairWithPlatform" type="Node3D" parent="Level/Stairs"]
+
+[node name="Stair" parent="Level/Stairs/StairWithPlatform" instance=ExtResource("3_7g83o")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.548197, 2, 0)
 material_override = SubResource("StandardMaterial3D_1lgw5")
+use_collision = true
+size = Vector3(4, 4, 4)
+
+[node name="Platform" type="CSGBox3D" parent="Level/Stairs/StairWithPlatform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.549017, 2, 0)
+material_override = SubResource("StandardMaterial3D_hlk0d")
 use_collision = true
 size = Vector3(4, 4, 4)
