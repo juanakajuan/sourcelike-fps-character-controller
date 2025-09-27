@@ -1,12 +1,11 @@
 extends CharacterBody3D
 
+@export_category("Camera Settings")
 @export var look_sensitivity: float = 0.002
-@export var jump_velocity: float = 6.0
-@export var auto_bhop: bool = true
 
-const HEADBOB_MOVE_AMOUNT: float = 0.06
-const HEADBOB_FREQUENCY: float = 2.4
-var headbob_time: float = 0.0
+@export_category("Jumping")
+@export var jump_velocity: float = 7.0
+@export var auto_bhop: bool = true
 
 @export_category("Ground Movement")
 @export var walk_speed: float = 7.0
@@ -20,8 +19,17 @@ var headbob_time: float = 0.0
 @export var air_acceleration: float = 800.0
 @export var air_move_speed: float = 500.0
 
+const HEADBOB_MOVE_AMOUNT: float = 0.06
+const HEADBOB_FREQUENCY: float = 2.4
+var headbob_time: float = 0.0
+
 var wish_direction: Vector3 = Vector3.ZERO
 var camera_aligned_wish_direction: Vector3 = Vector3.ZERO
+
+const CROUCH_TRANSLATE: float = 0.7
+const CROUCH_JUMP_ADD: float = CROUCH_TRANSLATE * 0.9
+var is_crouched: bool = false
+@onready var _original_capsule_height = $CollisionShape3D.shape.height
 
 var noclip_speed_multiplier: float = 3.0
 var noclip: bool = false
@@ -34,6 +42,9 @@ var _saved_camera_global_position = null
 
 
 func get_move_speed() -> float:
+	if is_crouched:
+		return walk_speed * 0.8
+
 	return sprint_speed if Input.is_action_pressed("sprint") else walk_speed
 
 
@@ -88,6 +99,8 @@ func _physics_process(delta: float) -> void:
 	camera_aligned_wish_direction = (
 		%Camera3D.global_transform.basis * Vector3(input_direction.x, 0.0, input_direction.y)
 	)
+
+	_handle_crouch(delta)
 
 	if not _handle_noclip(delta):
 		if is_on_floor() or _snapped_to_stairs_last_frame:
@@ -298,3 +311,40 @@ func _slide_camera_smooth_back_to_origin(delta: float) -> void:
 
 	if %CameraSmooth.position.y == 0:
 		_saved_camera_global_position = null  # Stop smoothing the camera
+
+
+func _handle_crouch(delta: float) -> void:
+	var was_crouched_last_frame: bool = is_crouched
+
+	if Input.is_action_pressed("crouch"):
+		is_crouched = true
+	elif (
+		is_crouched
+		and not self.test_move(self.global_transform, Vector3(0.0, CROUCH_TRANSLATE, 0.0))
+	):
+		is_crouched = false
+
+	# Allow for crouch to heighten/extend a jump
+	var translate_y_if_possible: float = 0.0
+	if (
+		was_crouched_last_frame != is_crouched
+		and not is_on_floor()
+		and not _snapped_to_stairs_last_frame
+	):
+		translate_y_if_possible = CROUCH_JUMP_ADD if is_crouched else -CROUCH_JUMP_ADD
+
+	# Make sure not to get the player stuck in the floor/ceiling during crouch jumps
+	if translate_y_if_possible != 0.0:
+		var result: KinematicCollision3D = KinematicCollision3D.new()
+		self.test_move(self.global_transform, Vector3(0.0, translate_y_if_possible, 0.0), result)
+		self.position.y += result.get_travel().y
+		%Head.position.y -= result.get_travel().y
+		%Head.position.y = clampf(%Head.position.y, -CROUCH_TRANSLATE, 0)
+
+	%Head.position.y = move_toward(
+		%Head.position.y, -CROUCH_TRANSLATE if is_crouched else 0.0, 7.0 * delta
+	)
+	$CollisionShape3D.shape.height = (
+		_original_capsule_height - CROUCH_TRANSLATE if is_crouched else _original_capsule_height
+	)
+	$CollisionShape3D.position.y = $CollisionShape3D.shape.height / 2
