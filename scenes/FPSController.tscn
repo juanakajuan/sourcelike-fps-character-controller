@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://2hmpuo8qblwe"]
+[gd_scene load_steps=6 format=3 uid="uid://2hmpuo8qblwe"]
 
 [ext_resource type="Script" uid="uid://bp3igkhbwlg5m" path="res://scripts/fps_controller.gd" id="1_u7epq"]
 [ext_resource type="PackedScene" uid="uid://casjfhonfstyb" path="res://models/rubber_duck_toy_4k.gltf/rubber_duck_toy_4k.gltf" id="2_jr1ti"]
+[ext_resource type="PackedScene" uid="uid://0xxcn1p70m4" path="res://models/google_cardboard_viewer.glb" id="3_ooet5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f6xud"]
 
@@ -24,14 +25,19 @@ mesh = SubResource("CapsuleMesh_jr1ti")
 [node name="rubber_duck_toy" parent="WorldModel" instance=ExtResource("2_jr1ti")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.9787873, 0)
 
-[node name="Head" type="Node3D" parent="."]
-unique_name_in_owner = true
+[node name="google_cardboard_viewer" parent="WorldModel" instance=ExtResource("3_ooet5")]
+transform = Transform3D(-1.4446614e-07, 0, -4.525, 0, 3.07, 0, 3.305, 0, -1.9779404e-07, 0, 1.4943961, -0.40525603)
+
+[node name="HeadOriginalPosition" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
 
-[node name="CameraSmooth" type="Node3D" parent="Head"]
+[node name="Head" type="Node3D" parent="HeadOriginalPosition"]
 unique_name_in_owner = true
 
-[node name="Camera3D" type="Camera3D" parent="Head/CameraSmooth"]
+[node name="CameraSmooth" type="Node3D" parent="HeadOriginalPosition/Head"]
+unique_name_in_owner = true
+
+[node name="Camera3D" type="Camera3D" parent="HeadOriginalPosition/Head/CameraSmooth"]
 unique_name_in_owner = true
 cull_mask = 1048573
 
